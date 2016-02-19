@@ -8,8 +8,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class QuizClient {
-	private final static String serverAdress = "localhost";
-	private final static int serverPort = 9876;
+	private final static String serverAdress = "localhost"; //10.21.24.192
+	private final static int serverPort = 9876;	// 1342
 	private final static String endMessage = "Takk for at du deltok!";
 	private Scanner in;
 	private Socket connection;
@@ -18,23 +18,27 @@ public class QuizClient {
 
 	public QuizClient() {
 
-		try /*(Scanner in = new Scanner(System.in);
+		try (Scanner in = new Scanner(System.in);
 			 Socket connection = new Socket(serverAdress, serverPort);
 			 DataOutputStream output = new DataOutputStream(connection.getOutputStream());
-			 DataInputStream input = new DataInputStream(connection.getInputStream()))*/
-		{
-			in = new Scanner(System.in);
+			 DataInputStream input = new DataInputStream(connection.getInputStream())) {
+			/*in = new Scanner(System.in);
 			connection = new Socket(serverAdress, serverPort);
 			output = new DataOutputStream(connection.getOutputStream());
-			input = new DataInputStream(connection.getInputStream());
+			input = new DataInputStream(connection.getInputStream());*/
+			this.in = in;
+			this.connection = connection;
+			this.output = output;
+			this.input = input;
 			output.flush();
 
+			System.out.println("Tilkoblet forfatter-QUIZ server");
 			runClient();
 		} catch (EOFException e) {
-			System.out.println("QuizServer closed the connection");
-			e.printStackTrace();
+			showMessage("Tilkobling til server avsluttet");
 		} catch (IOException e) {
-			System.out.println("QuizConnection problem: " + e.getMessage());
+			System.out.println(e.getMessage());
+			System.exit(1);
 		}
 	}
 
@@ -47,7 +51,7 @@ public class QuizClient {
 		do {
 			message = readMessage();
 			showMessage(message);
-			if (in.hasNextLine())
+			if (!message.equals(endMessage) && in.hasNextLine())
 				sendMessage(in.nextLine());
 		}
 		while (!message.equals(endMessage));
@@ -64,21 +68,5 @@ public class QuizClient {
 
 	public String readMessage () throws IOException {
 		return input.readUTF();
-	}
-
-	private void setIn(Scanner in) {
-		this.in = in;
-	}
-
-	private void setConnection(Socket connection) {
-		this.connection = connection;
-	}
-
-	private void setOutput(DataOutputStream output) {
-		this.output = output;
-	}
-
-	private void setInput(DataInputStream input) {
-		this.input = input;
 	}
 }
