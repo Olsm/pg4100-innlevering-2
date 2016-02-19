@@ -8,8 +8,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class QuizClient {
-	private final static String serverAdress = "localhost"; //10.21.24.192
-	private final static int serverPort = 9876;	// 1342
+	private final static String serverAddress = "localhost";
+	private final static int serverPort = 9876;
 	private final static String endMessage = "Takk for at du deltok!";
 	private Scanner in;
 	private Socket connection;
@@ -19,13 +19,10 @@ public class QuizClient {
 	public QuizClient() {
 
 		try (Scanner in = new Scanner(System.in);
-			 Socket connection = new Socket(serverAdress, serverPort);
+			 Socket connection = new Socket(serverAddress, serverPort);
 			 DataOutputStream output = new DataOutputStream(connection.getOutputStream());
-			 DataInputStream input = new DataInputStream(connection.getInputStream())) {
-			/*in = new Scanner(System.in);
-			connection = new Socket(serverAdress, serverPort);
-			output = new DataOutputStream(connection.getOutputStream());
-			input = new DataInputStream(connection.getInputStream());*/
+			 DataInputStream input = new DataInputStream(connection.getInputStream()))
+		{
 			this.in = in;
 			this.connection = connection;
 			this.output = output;
