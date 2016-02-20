@@ -16,19 +16,22 @@ public class QuizClient {
 	private DataOutputStream output;
 	private DataInputStream input;
 
+	// Connect to the server, create resources and start the client
 	public QuizClient() {
-
+		// Use try-with-resources to make sure resources are closed
 		try (Scanner in = new Scanner(System.in);
 			 Socket connection = new Socket(serverAddress, serverPort);
 			 DataOutputStream output = new DataOutputStream(connection.getOutputStream());
 			 DataInputStream input = new DataInputStream(connection.getInputStream()))
 		{
+			// Set the resources in class variables for easy access by other methods
 			this.in = in;
 			this.connection = connection;
 			this.output = output;
 			this.input = input;
 			output.flush();
 
+			// Start the client
 			System.out.println("Tilkoblet forfatter-QUIZ server");
 			runClient();
 		} catch (EOFException e) {
@@ -39,10 +42,12 @@ public class QuizClient {
 		}
 	}
 
+	// Main method, simply start a new instance of the client
 	public static void main(String[] args) {
 		new QuizClient();
 	}
 
+	// Get and show message from server and reply with message from console
 	private void runClient() throws IOException {
 		String message;
 		do {
@@ -54,15 +59,18 @@ public class QuizClient {
 		while (!message.equals(endMessage));
 	}
 
+	// Simple method for showing messages, currently by printing to console
 	private void showMessage(String message) {
 		System.out.print("\n" + message);
 	}
 
+	// Send a message to the server
 	public void sendMessage (String message) throws IOException {
 		output.writeUTF(message);
 		output.flush();
 	}
 
+	// Read message from server
 	public String readMessage () throws IOException {
 		return input.readUTF();
 	}
