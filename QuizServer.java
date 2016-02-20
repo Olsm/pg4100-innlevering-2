@@ -172,7 +172,7 @@ public class QuizServer {
 		}
 
 		// Check if the answer (author) was correct
-		public boolean verifyAuthor (String answer, String bookAuthor) {
+		private boolean verifyAuthor(String answer, String bookAuthor) {
 			if (!answer.contains(",") && answer.contains(" ")) {
 				String[] answerElements = answer.split(" ");
 				answer = answerElements[1] + ", " + answerElements[0];
