@@ -65,13 +65,13 @@ public class QuizClient {
 	}
 
 	// Send a message to the server
-	public void sendMessage (String message) throws IOException {
+	private void sendMessage (String message) throws IOException {
 		output.writeUTF(message);
 		output.flush();
 	}
 
 	// Read message from server
-	public String readMessage () throws IOException {
+	private String readMessage () throws IOException {
 		return input.readUTF();
 	}
 }
