@@ -132,7 +132,7 @@ public class QuizServer {
 				String bookAuthor = bookElements[1];
 
 				// send a question to the client
-				sendMessage("Hvem har skrevet " + bookTitle + " ");
+				sendMessage("Hvem har skrevet " + bookTitle + "? ");
 
 				// Get the answer from client and verify it is correct
 				answer = readMessage();
