@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class QuizServer {
 	private final static int serverPort = 9876;
 	private final static String dbHost = "localhost";
 	private final static String dbUser = "root";
 	private final static String dbPass = "root";
+	ExecutorService threadExecutor;
 	private ServerSocket socket;
 	private List<QuizConnection> quizConnections;
 	private ArrayList<String> table;
@@ -29,6 +32,7 @@ public class QuizServer {
 		{
 			// Set the resources in class
 			this.socket = socket;
+			threadExecutor = Executors.newCachedThreadPool();
 			table = db.getTable();
 
 			// Wait for and create client connections by launching new QuizConnection threads
@@ -56,7 +60,7 @@ public class QuizServer {
 	// Create a new QuizConnection instance and start a new thread
 	private void startQuizConnection() {
 		QuizConnection quizConnection = new QuizConnection();
-		new Thread(quizConnection).start();
+		threadExecutor.execute(quizConnection);
 		quizConnections.add(quizConnection);
 		showMessage("\nConnected with " + quizConnection.connection.getInetAddress().toString());
 		showMessage("Number of clients connected: " + quizConnections.size());
@@ -83,6 +87,7 @@ public class QuizServer {
 		} catch (IOException e) {
 			showMessage("An error occurred when closing server:\n" + e.getMessage());
 		}
+		threadExecutor.shutdown();
 	}
 
 	/* Server Quiz connection with client
