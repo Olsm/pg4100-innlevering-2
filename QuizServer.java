@@ -7,6 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class QuizServer {
@@ -15,12 +17,12 @@ public class QuizServer {
 	private final static String dbUser = "root";
 	private final static String dbPass = "root";
 	private ServerSocket socket;
-	private ArrayList<QuizConnection> quizConnections;
+	private List<QuizConnection> quizConnections;
 	private ArrayList<String> table;
 
 	// Create server socket, get table from database, and start QuizConnection threads
 	public QuizServer() {
-		quizConnections = new ArrayList<>();
+		quizConnections = Collections.synchronizedList(new ArrayList<>());
 		// Use try-with-resources to make sure resources are closed
 		try (ServerSocket socket = new ServerSocket(serverPort);
 			 DBHandlerBokliste db = new DBHandlerBokliste(dbHost, dbUser, dbPass))
