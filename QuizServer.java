@@ -186,6 +186,7 @@ public class QuizServer {
 			bookAuthor = bookAuthor.replaceAll(",", "");
 			bookAuthor = bookAuthor.replaceAll("\\.", "");
 			answer = answer.replaceAll("\\s+", " ");
+			answer = answer.replaceAll("\\.", "");
 
 			if (!answer.contains(",") && answer.contains(" ")) {
 				answer = answer.replace(" ", ",");
@@ -194,7 +195,6 @@ public class QuizServer {
 			if (answer.contains(",")) {
 				answer = answer.replaceAll(" ", "");
 				String[] answerElements = answer.split(",");
-				System.out.println("answer: " + bookAuthor);
 				isCorrect = bookAuthor.equalsIgnoreCase(answerElements[1] + answerElements[0]);
 				if (!isCorrect) isCorrect = bookAuthor.equalsIgnoreCase(answerElements[0] + answerElements[1]);
 			}
