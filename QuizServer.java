@@ -18,7 +18,7 @@ public class QuizServer {
 	private final static String dbHost = "localhost";
 	private final static String dbUser = "root";
 	private final static String dbPass = "root";
-	ExecutorService threadExecutor;
+	private ExecutorService threadExecutor;
 	private ServerSocket socket;
 	private List<QuizConnection> quizConnections;
 	private ArrayList<String> table;
@@ -143,7 +143,7 @@ public class QuizServer {
 
 				// Get the answer from client and verify it is correct
 				answer = readMessage();
-				if (verifyAuthor(answer, bookAuthor))
+				if (verifyAuthor(answer, bookAuthor.replaceAll(" ", "")))
 					sendMessage("Riktig!" +  "\nVil du fortsette? (ja/nei) ");
 				else
 					sendMessage("Feil - det er " + bookAuthor + "\nVil du fortsette? (ja/nei) ");
@@ -180,11 +180,26 @@ public class QuizServer {
 
 		// Check if the answer (author) was correct
 		private boolean verifyAuthor(String answer, String bookAuthor) {
+			boolean isCorrect = false;
+
+			bookAuthor = bookAuthor.replaceAll(" ", "");
+			bookAuthor = bookAuthor.replaceAll(",", "");
+			bookAuthor = bookAuthor.replaceAll("\\.", "");
+			answer = answer.replaceAll("\\s+", " ");
+
 			if (!answer.contains(",") && answer.contains(" ")) {
-				String[] answerElements = answer.split(" ");
-				answer = answerElements[1] + ", " + answerElements[0];
+				answer = answer.replace(" ", ",");
 			}
-			return answer.equalsIgnoreCase(bookAuthor);
+
+			if (answer.contains(",")) {
+				answer = answer.replaceAll(" ", "");
+				String[] answerElements = answer.split(",");
+				System.out.println("answer: " + bookAuthor);
+				isCorrect = bookAuthor.equalsIgnoreCase(answerElements[1] + answerElements[0]);
+				if (!isCorrect) isCorrect = bookAuthor.equalsIgnoreCase(answerElements[0] + answerElements[1]);
+			}
+
+			return isCorrect;
 		}
 
 		// Close all resources in this server-client connection
